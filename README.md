@@ -1,14 +1,4 @@
 # Fluent::Plugin::Cloudwatch Transform
-stCount",
-    "value": "6.0",
-    "raw": {
-        "HealthyHostCount": 6
-    },
-    "receive_time_input": "1426189324",
-    "application_name": "Form & Printing Services (FPS)",
-    "intermediary_source": "cloudwatch",
-    "tag": "alert.cloudwatch.out"
-}
 
 fluent-plugin-cloudwatch-transform is an output plug-in for [Fluentd](http://fluentd.org)
 
