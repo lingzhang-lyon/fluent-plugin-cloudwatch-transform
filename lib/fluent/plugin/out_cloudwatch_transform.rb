@@ -33,17 +33,22 @@ module Fluent
       last_tag = tag_parts[tag_parts.size-1]
       chain.next
       es.each {|time,record|
-        #$stderr.puts "OK!"
 
     		newhash = Hash.new
-    		# though there is just one key-value pair in cloudwatch alert record, we add context for it.
+    		# though there is just one key-value pair in cloudwatch alert record, we use a loop to add context for it.
     		record.each_pair do |singlekey, singlevalue|
     				newhash["event_name"] = singlekey
-            newhash["value"] = singlevalue
+            newhash["value"] = singlevalue.to_s
+            newhash["raw"] ={singlekey => singlevalue}
         end
         # add more information for the cloudwatch alert
+        timestamp = Engine.now # Should be receive_time_input
+        newhash['receive_time_input']=timestamp.to_s
         newhash["application_name"] = last_tag
         newhash["intermediary_source"] = "cloudwatch"
+
+        #log the transformed message and emit it
+        $log.info "Tranformed message  #{newhash}"
     		Fluent::Engine.emit @tag, time.to_i, newhash
       }
     end
