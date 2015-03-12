@@ -9,7 +9,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["zhangling.ice@gmail.com"]
   gem.summary       = %q{Fluentd output plugin for transform cloudwatch alerts }
   gem.description   = %q{FLuentd plugin for transform cloudwatch alerts... WIP}
-  gem.homepage      = 'https://github.com/lyon-lingzhang/fluent-plugin-cloudwatch-transform'
+  gem.homepage      = 'https://github.com/lingzhang-lyon/fluent-plugin-cloudwatch-transform'
   gem.license       = 'MIT'
 
   gem.files         = `git ls-files`.split($\)
