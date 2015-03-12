@@ -1,0 +1,8 @@
+<match alert.cloudwatch.raw.**>
+ type cloudwatch_transform
+ tag  alert.cloudwatch.out
+</match>
+
+<match alert.cloudwatch.out>
+ type stdout
+</match>
