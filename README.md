@@ -19,6 +19,8 @@ If you don't, please run through [quick start for fluentd] (https://github.com/f
 
 Now after you have fluentd installed you can follow either of the steps below:
 
+
+//not available yet
 Add this line to your application's Gemfile:
 
     gem 'fluent-plugin-cloudwatch-transform'
@@ -75,6 +77,9 @@ Add the following into your fluentd config.
         "tag": "alert.cloudwatch.out"
     }
 
+## To DO
+need to write the test
+not push to fluent.org yet
 
 
 
