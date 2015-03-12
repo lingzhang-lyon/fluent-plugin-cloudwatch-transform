@@ -10,15 +10,26 @@ If you don't, please run through [quick start for fluentd] (https://github.com/f
 Now after you have fluentd installed you can follow either of the steps below:
 
 
-//not available yet
+//not available yet:
 
 Add this line to your application's Gemfile:
 
-    gem 'fluent-plugin-cloudwatch-transform'
+    $ gem 'fluent-plugin-cloudwatch-transform'
 
 Or install it yourself as:
 
     $ gem install fluent-plugin-cloudwatch-transform
+
+//for current version:
+
+    just download or clone this repository
+
+    in the folder of this repository:
+
+    $ gem build fluent-plugin-cloudwatch-transform.gemspec
+
+    $ sudo gem install ./fluent-plugin-cloudwatch-transform-0.0.1.gem
+    
 
 ## Usage
 
