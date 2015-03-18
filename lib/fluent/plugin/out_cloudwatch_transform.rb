@@ -1,5 +1,5 @@
 module Fluent
-  class NewrelicOutput < Output
+  class CloudWatchTransOutput < Output
     # First, register the plugin. NAME is the name of this plugin
     # and identifies the plugin in the configuration file.
     Fluent::Plugin.register_output('cloudwatch_transform', self)
@@ -44,9 +44,10 @@ module Fluent
         end
         # add more information for the cloudwatch alert
         timestamp = Engine.now # Should be receive_time_input
-        newhash['receive_time_input']=timestamp.to_s
+        newhash["receive_time_input"]=timestamp.to_s
         newhash["application_name"] = last_tag
         newhash["intermediary_source"] = "cloudwatch"
+        newhash["event_type"] = "alert.cloudwatch"
 
         #log the transformed message and emit it
         $log.info "Tranformed message  #{newhash}"
