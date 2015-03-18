@@ -4,7 +4,8 @@ module Fluent
     # and identifies the plugin in the configuration file.
     Fluent::Plugin.register_output('cloudwatch_transform', self)
     
-    config_param :tag, :string, default:'alert.cloudwatch.out' 
+    #config_param :tag, :string, default:'alert.cloudwatch.out' 
+    config_param :tag, :string
 
     # This method is called before starting.
     def configure(conf)
