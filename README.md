@@ -85,7 +85,6 @@ Add the following into your fluentd config.
 ## To DO
 need to write the test
 
-not push to fluent.org yet
 
 
 
