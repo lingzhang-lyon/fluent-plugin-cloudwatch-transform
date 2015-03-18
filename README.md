@@ -31,7 +31,7 @@ Or install it yourself as:
 
     $ gem build fluent-plugin-cloudwatch-transform.gemspec
 
-    $ sudo gem install ./fluent-plugin-cloudwatch-transform-0.0.2.gem
+    $ sudo gem install ./fluent-plugin-cloudwatch-transform-0.0.3.gem
     
 
 ## Usage

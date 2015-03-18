@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |gem|
   gem.name          = "fluent-plugin-cloudwatch-transform"
-  gem.version       = "0.0.2"
+  gem.version       = "0.0.3"
   gem.date          = '2015-03-18'
   gem.authors       = ["Ling Zhang"]
   gem.email         = ["zhangling.ice@gmail.com"]
