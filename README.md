@@ -2,6 +2,9 @@
 
 fluent-plugin-cloudwatch-transform is an output plug-in for [Fluentd](http://fluentd.org)
 
+It can transform the alerts from fluent-plugin-cloudwatch to key-value pairs as "event_name" and "value", 
+also add more information from the tag you added in fluent-plugin-cloudwatch.
+
 ## Installation
 
 These instructions assume you already have fluentd installed. 
@@ -31,7 +34,7 @@ Or install it yourself as:
 
     $ gem build fluent-plugin-cloudwatch-transform.gemspec
 
-    $ sudo gem install ./fluent-plugin-cloudwatch-transform-0.0.3.gem
+    $ sudo gem install ./fluent-plugin-cloudwatch-transform-0.0.4.gem
     
 
 ## Usage
@@ -42,7 +45,9 @@ Add the following into your fluentd config.
 
     <source>
       type cloudwatch
-      tag  #tag with application name, like: alert.cloudwatch.raw.Form & Printing Services (FPS)
+      tag  #tag with prefix alert.cloudwatch.raw
+      # followed with region and availability zone, application name, wiki url in sequence  
+      # for example: alert.cloudwatch.raw.region1-AZ1.Form & Printing Services (FPS)."http://runbook.wiki.com"
       aws_key_id   #your id 
       aws_sec_key  #your key
       cw_endpoint  #your endpoint
@@ -78,7 +83,9 @@ Add the following into your fluentd config.
         },
         "receive_time_input": "1426189324",
         "application_name": "Form & Printing Services (FPS)",
-        "intermediary_source": "cloudwatch",
+        "intermediary_source": "region1-AZ1",
+        "runbook": "http://runbook.wiki.com"
+        "event_type" : "alert.cloudwatch"
         "tag": "alert.cloudwatch.out"
     }
 

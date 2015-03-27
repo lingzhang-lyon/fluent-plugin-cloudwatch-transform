@@ -30,8 +30,13 @@ module Fluent
     #
     # NOTE! This method is called by Fluentd's main thread so you should not write slow routine here. It causes Fluentd's performance degression.
     def emit(tag, es, chain)
-      tag_parts = tag.split('.')
-      last_tag = tag_parts[tag_parts.size-1]
+      #tag_parts = tag.split('.')
+      tag_parts = tag.scan( /([^".]+)|"([^"]+)"/ ).flatten.compact
+      # the prefix of tag should be like alert.cloudwatch.raw.***
+      # so start from tag_parts[3]
+      regionAZ = tag_parts[3]
+      application_name = tag_parts[4]
+      runbook_url = tag_parts[5]
       chain.next
       es.each {|time,record|
 
@@ -45,8 +50,9 @@ module Fluent
         # add more information for the cloudwatch alert
         timestamp = Engine.now # Should be receive_time_input
         newhash["receive_time_input"]=timestamp.to_s
-        newhash["application_name"] = last_tag
-        newhash["intermediary_source"] = "cloudwatch"
+        newhash["application_name"] = application_name
+        newhash["intermediary_source"] = regionAZ
+        newhash["runbook"] =  runbook_url
         newhash["event_type"] = "alert.cloudwatch"
 
         #log the transformed message and emit it

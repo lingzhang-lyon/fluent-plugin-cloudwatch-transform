@@ -3,12 +3,12 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |gem|
   gem.name          = "fluent-plugin-cloudwatch-transform"
-  gem.version       = "0.0.3"
-  gem.date          = '2015-03-18'
+  gem.version       = "0.0.4"
+  gem.date          = '2015-03-26'
   gem.authors       = ["Ling Zhang"]
   gem.email         = ["zhangling.ice@gmail.com"]
   gem.summary       = %q{Fluentd output plugin for transform cloudwatch alerts }
-  gem.description   = %q{FLuentd plugin for transform cloudwatch alerts... WIP}
+  gem.description   = %q{FLuentd plugin for transform cloudwatch alerts}
   gem.homepage      = 'https://github.com/lingzhang-lyon/fluent-plugin-cloudwatch-transform'
   gem.license       = 'MIT'
 
