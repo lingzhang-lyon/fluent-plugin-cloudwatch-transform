@@ -28,7 +28,7 @@ Or install it yourself as:
 
     $ fluent-gem install fluent-plugin-cloudwatch-transform
 
-//for build the gem locally:
+for build the gem locally:
 
     just download or clone this repository
 
