@@ -6,15 +6,24 @@ module Fluent
     
     #config_param :tag, :string, default:'alert.cloudwatch.out' 
     config_param :tag, :string
+    config_param  :state_type,    :string,  :default => nil
+    config_param  :state_file,    :string,  :default => nil
 
     # This method is called before starting.
     def configure(conf)
       super
     end
 
+    def initialize
+      require 'highwatermark'
+      super
+    end # def initialize
+
     # This method is called when starting.
     def start
       super
+      @highwatermark = Highwatermark::HighWaterMark.new(@state_file, @state_type)
+
     end
 
     # This method is called when shutting down.
@@ -54,6 +63,15 @@ module Fluent
         newhash["intermediary_source"] = regionAZ
         newhash["runbook"] =  runbook_url
         newhash["event_type"] = "alert.cloudwatch"
+
+        if @highwatermark.last_records(@tag)
+          last_hwm = @highwatermark.last_records(@tag)
+          $log.info "got hwm form state file: #{last_hwm.to_i}"
+        else
+          $log.info "no hwm yet"
+        end
+
+        @highwatermark.update_records(timestamp.to_s,@tag)
 
         #log the transformed message and emit it
         $log.info "Tranformed message  #{newhash}"
