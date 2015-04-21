@@ -4,10 +4,10 @@ module Fluent
     # and identifies the plugin in the configuration file.
     Fluent::Plugin.register_output('cloudwatch_transform', self)
     
-    #config_param :tag, :string, default:'alert.cloudwatch.out' 
-    config_param :tag, :string
+    config_param  :out_tag,           :string
     config_param  :state_type,    :string,  :default => nil
     config_param  :state_file,    :string,  :default => nil
+    config_param  :state_tag,     :string,  :default => nil
 
     # This method is called before starting.
     def configure(conf)
@@ -64,18 +64,18 @@ module Fluent
         newhash["runbook"] =  runbook_url
         newhash["event_type"] = "alert.cloudwatch"
 
-        if @highwatermark.last_records(@tag)
-          last_hwm = @highwatermark.last_records(@tag)
+        if @highwatermark.last_records(@state_tag)
+          last_hwm = @highwatermark.last_records(@state_tag)
           $log.info "got hwm form state file: #{last_hwm.to_i}"
         else
           $log.info "no hwm yet"
         end
 
-        @highwatermark.update_records(timestamp.to_s,@tag)
+        @highwatermark.update_records(timestamp.to_s,@state_tag)
 
         #log the transformed message and emit it
         $log.info "Tranformed message  #{newhash}"
-    		Fluent::Engine.emit @tag, time.to_i, newhash
+    		Fluent::Engine.emit @out_tag, time.to_i, newhash
       }
     end
 
