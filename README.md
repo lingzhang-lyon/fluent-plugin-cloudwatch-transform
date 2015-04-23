@@ -4,6 +4,7 @@ fluent-plugin-cloudwatch-transform is an output plug-in for [Fluentd](http://flu
 
 It can transform the alerts from fluent-plugin-cloudwatch to key-value pairs as "event_name" and "value", 
 also add more information from the tag you added in fluent-plugin-cloudwatch.
+You can configure the position of these information in the tag, and also the name in the final output.
 
 It also used "highwatermark" gem to store status timestamp to state file or redis cache
 
@@ -48,9 +49,10 @@ Add the following into your fluentd config.
 
     <source>
       type cloudwatch
-      tag  #tag with prefix alert.cloudwatch.raw
-      # followed with region and availability zone, application name, wiki url in sequence  
-      # for example: alert.cloudwatch.raw.region1-AZ1.Form & Printing Services (FPS)."http://runbook.wiki.com"
+      tag  #tag with some extra information that your want to put in th output after transform 
+      # like region and availability zone, application name, wiki url in sequence  
+      # for example: alert.raw.cloudwatch.region1-AZ1.Form & Printing Services (FPS)."http://runbook.wiki.com"
+      # the prefix alert.raw.cloudwatch is for the match, the rest is for the information
       aws_key_id   #your id 
       aws_sec_key  #your key
       cw_endpoint  #your endpoint
@@ -61,15 +63,22 @@ Add the following into your fluentd config.
       dimensions_value # dimensions value
     </source>
 
-    <match alert.cloudwatch.raw.**>
+    <match alert.raw.cloudwatch.**>
      type cloudwatch_transform
-     tag  alert.cloudwatch.out
+     out_tag  alert.processed.cloudwatch
      state_type file #could be <redis/file/memory>
      state_file /path/to/state/file/or/redis/conf  # the file path for store state or the redis configure
-
+     state_tag cloudwatch
+     name_for_origin_key event_name
+     name_for_origin_value value
+     <tag_infos>
+      region_and_AZ 3
+      application_name 4
+      runbook 5
+     </tag_infos>
     </match>
 
-    <match alert.cloudwatch.out> 
+    <match alert.processed.cloudwatch> 
      type stdout
     </match>
 
