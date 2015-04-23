@@ -8,10 +8,23 @@ module Fluent
     config_param  :state_type,    :string,  :default => nil
     config_param  :state_file,    :string,  :default => nil
     config_param  :state_tag,     :string,  :default => nil
+    config_param  :name_for_origin_key,     :string,  :default => nil
+    config_param  :name_for_origin_value,     :string,  :default => nil
+
+    #also need add config for info_name and postion_in_tag (start from 0) within <tag_infos> </tag_infos> block
 
     # This method is called before starting.
     def configure(conf)
       super
+      # Read configuration for tag_infos and create a hash
+      @tag_infos = Hash.new
+      conf.elements.select { |element| element.name == 'tag_infos' }.each { |element|
+        element.each_pair { |info_name, position_in_tag|
+          @tag_infos[info_name] = position_in_tag.to_i
+          $log.info "Added tag_infos: #{info_name}=>#{@tag_infos[info_name]}"
+        }
+      }
+
     end
 
     def initialize
@@ -39,30 +52,31 @@ module Fluent
     #
     # NOTE! This method is called by Fluentd's main thread so you should not write slow routine here. It causes Fluentd's performance degression.
     def emit(tag, es, chain)
-      #tag_parts = tag.split('.')
       tag_parts = tag.scan( /([^".]+)|"([^"]+)"/ ).flatten.compact
-      # the prefix of tag should be like alert.cloudwatch.raw.***
-      # so start from tag_parts[3]
-      regionAZ = tag_parts[3]
-      application_name = tag_parts[4]
-      runbook_url = tag_parts[5]
+      # split the tags with .
+      # ingnore the . within ""
+
       chain.next
       es.each {|time,record|
 
     		newhash = Hash.new
     		# though there is just one key-value pair in cloudwatch alert record, we use a loop to add context for it.
     		record.each_pair do |singlekey, singlevalue|
-    				newhash["event_name"] = singlekey
-            newhash["value"] = singlevalue.to_s
+    				newhash[@name_for_origin_key] = singlekey
+            newhash[@name_for_origin_value] = singlevalue.to_s
             newhash["raw"] ={singlekey => singlevalue}
         end
         # add more information for the cloudwatch alert
+        # fixed info
         timestamp = Engine.now # Should be receive_time_input
         newhash["receive_time_input"]=timestamp.to_s
-        newhash["application_name"] = application_name
-        newhash["intermediary_source"] = regionAZ
-        newhash["runbook"] =  runbook_url
-        newhash["event_type"] = "alert.cloudwatch"
+        newhash["event_type"] = @out_tag
+
+        @tag_infos.each do |info_name, position_in_tag|
+          newhash[info_name] = tag_parts[position_in_tag]
+        end
+
+          
 
         if @highwatermark.last_records(@state_tag)
           last_hwm = @highwatermark.last_records(@state_tag)
