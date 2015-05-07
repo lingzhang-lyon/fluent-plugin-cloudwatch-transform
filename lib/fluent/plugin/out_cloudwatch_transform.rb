@@ -5,7 +5,7 @@ module Fluent
     Fluent::Plugin.register_output('cloudwatch_transform', self)
     
     config_param  :out_tag,           :string
-    config_param  :state_tag,     :string,  :default => "spectrum"
+    config_param  :state_tag,     :string,  :default => "cloudwatch"
     config_param  :state_type,    :string,  :default => "memory"
     config_param  :state_file,    :string,  :default => nil
     config_param  :redis_host,    :string,  :default => nil
