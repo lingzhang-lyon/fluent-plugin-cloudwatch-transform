@@ -22,6 +22,7 @@ module Fluent
       @tag_infos = Hash.new
       conf.elements.select { |element| element.name == 'tag_infos' }.each { |element|
         element.each_pair { |info_name, position_in_tag|
+          element.has_key?(info_name) # to suppress unread configuration warning
           @tag_infos[info_name] = position_in_tag.to_i
           $log.info "Added tag_infos: #{info_name}=>#{@tag_infos[info_name]}"
         }
