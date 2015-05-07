@@ -5,9 +5,11 @@ module Fluent
     Fluent::Plugin.register_output('cloudwatch_transform', self)
     
     config_param  :out_tag,           :string
-    config_param  :state_type,    :string,  :default => nil
+    config_param  :state_tag,     :string,  :default => "spectrum"
+    config_param  :state_type,    :string,  :default => "memory"
     config_param  :state_file,    :string,  :default => nil
-    config_param  :state_tag,     :string,  :default => nil
+    config_param  :redis_host,    :string,  :default => nil
+    config_param  :redis_port,    :string,  :default => nil
     config_param  :name_for_origin_key,     :string,  :default => nil
     config_param  :name_for_origin_value,     :string,  :default => nil
 
@@ -25,6 +27,16 @@ module Fluent
         }
       }
 
+      # configure for highwatermark
+      @highwatermark_parameters={
+        "state_tag" => @state_tag,     
+        "state_type" => @state_type,
+        "state_file" => @state_file,
+        "redis_host" => @redis_host,
+        "redis_port" => @redis_port      
+      }
+      $log.info "highwatermark_parameters: #{@highwatermark_parameters}"
+
     end
 
     def initialize
@@ -35,7 +47,7 @@ module Fluent
     # This method is called when starting.
     def start
       super
-      @highwatermark = Highwatermark::HighWaterMark.new(@state_file, @state_type)
+      @highwatermark = Highwatermark::HighWaterMark.new(@highwatermark_parameters)
 
     end
 
